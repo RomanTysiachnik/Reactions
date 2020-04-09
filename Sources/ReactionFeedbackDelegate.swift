@@ -34,4 +34,5 @@ public protocol ReactionFeedbackDelegate: AnyObject {
    - Parameter feedback: The reaction feedback.
    */
   func reactionFeedbackDidChanged(_ feedback: ReactionFeedback?)
+  func didScrolledToNextReaction()
 }

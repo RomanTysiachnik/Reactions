@@ -121,11 +121,12 @@ public final class ReactionSelector: UIReactionControl {
 
       layer.addSublayer(backgroundLayer)
     }
-
-    backgroundLayer.fillColor = config.backgroundFillColor
+    backgroundLayer.fillColor = config.backgroundColor.cgColor
 
     reactionIconLayers.forEach { layer.addSublayer($0) }
-    reactionLabels.forEach { addSubview($0) }
+    if config.showLabels {
+      reactionLabels.forEach { addSubview($0) }
+    }
   }
 
   // MARK: - Updating Object State
@@ -147,8 +148,7 @@ public final class ReactionSelector: UIReactionControl {
     }
 
     backgroundLayer.add(pathAnimation, forKey: "morhingPath")
-
-    backgroundLayer.fillColor = config.backgroundFillColor
+    backgroundLayer.fillColor = config.backgroundColor.cgColor
 
     for index in 0 ..< reactionIconLayers.count {
       updateReactionAtIndex(index, highlighted: stateHighlightedReactionIndex == index)
@@ -159,11 +159,15 @@ public final class ReactionSelector: UIReactionControl {
 
   private func updateReactionAtIndex(_ index: Int, highlighted isHighlighted: Bool) {
     let icon: CALayer = reactionIconLayers[index]
+    icon.frame = config.computedIconFrameAtIndex(index, in: bounds, reactionCount: reactions.count, highlightedIndex: stateHighlightedReactionIndex)
+    
+    guard config.showLabels else { return }
+    
     let label: UILabel = reactionLabels[index]
     let labelAlpha: CGFloat = isHighlighted ? 1 : 0
-    let labelTranform: CGAffineTransform = isHighlighted ? .identity : CGAffineTransform(scaleX: 0.5, y: 0.5)
-
-    icon.frame = config.computedIconFrameAtIndex(index, in: bounds, reactionCount: reactions.count, highlightedIndex: stateHighlightedReactionIndex)
+    let labelTranform: CGAffineTransform = isHighlighted
+      ? .identity
+      : CGAffineTransform(scaleX: 0.75, y: 0.75)
 
     UIView.animate(withDuration: CATransaction.animationDuration(), delay: 0, options: .curveEaseIn, animations: { [unowned self] in
       label.alpha = labelAlpha
@@ -189,7 +193,7 @@ public final class ReactionSelector: UIReactionControl {
 
   // MARK: - Responding to Gesture Events
 
-  @objc func longPressAction(_ gestureRecognizer: UIGestureRecognizer) {
+  @objc func longPressAction(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
     let location = gestureRecognizer.location(in: self)
     let touchIndex = optionIndexFromPoint(location)
     let needsUpdate = touchIndex != stateHighlightedReactionIndex
@@ -210,6 +214,9 @@ public final class ReactionSelector: UIReactionControl {
     if gestureRecognizer.state == .changed {
       if needsUpdate {
         let isInside = isPointInsideExtendedBounds(location)
+        if isInside {
+          feedbackDelegate?.didScrolledToNextReaction()
+        }
 
         feedback = isInside ? .slideFingerAcross : .releaseToCancel
 
@@ -228,12 +235,15 @@ public final class ReactionSelector: UIReactionControl {
         sendActions(for: isPointInsideExtendedBounds(location) ? .touchUpInside : .touchUpOutside)
       }
     }
+
+    return isPointInsideExtendedBounds(location)
   }
 
   // MARK: - Locating Points
 
   private func isPointInsideExtendedBounds(_ location: CGPoint) -> Bool {
-    return CGRect(x: bounds.origin.x, y: -bounds.height, width: bounds.width, height: bounds.height * 3).contains(location)
+    return CGRect(x: bounds.origin.x, y: -(bounds.height / 2), width: bounds.width, height: bounds.height * 2.5)
+      .contains(location)
   }
 
   private func optionIndexFromPoint(_ location: CGPoint) -> Int? {

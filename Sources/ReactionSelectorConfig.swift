@@ -44,10 +44,13 @@ public final class ReactionSelectorConfig: Configurable {
 
   /// Boolean value to know whether the reactions needs to be sticked when they are selected.
   public var stickyReaction: Bool = false
+  
+  /// Boolean value to know whether the label on the top of the icon should be shown.
+  public var showLabels: Bool = false
 
   /// The fill color of the reaction selector.
-  public var backgroundFillColor: CGColor = UIColor.white.cgColor
-
+  public var backgroundColor: UIColor = UIColor.white
+  
   // MARK: - Initializing a Reaction Selector
 
   // Initialize a configurable with default values.
@@ -65,7 +68,7 @@ public final class ReactionSelectorConfig: Configurable {
   // MARK: - Convenient Methods
 
   // The default icon size
-  let defaultIconSize: CGFloat = 40
+  let defaultIconSize: CGFloat = 36
 
   /// Returns the icon size either in normal or highlighted mode
   final func computedIconSize(highlighted isHighlighted: Bool) -> CGFloat {

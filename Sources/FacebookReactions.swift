@@ -61,7 +61,7 @@ extension Reaction {
     }
 
     /// The list of standard facebook reactions in this order: `.like`, `.love`, `.haha`, `.wow`, `.sad`, `.angry`.
-    public static let all: [Reaction] = [facebook.like, facebook.love, facebook.haha, facebook.wow, facebook.sad, facebook.angry]
+    public static let all: [Reaction] = [facebook.like, facebook.love, facebook.haha, facebook.wow, facebook.sad]
 
     // MARK: - Convenience Methods
 
@@ -85,7 +85,11 @@ extension Reaction {
     }
 
     private static func imageWithName(_ name: String) -> UIImage {
-      return UIImage(named: name, in: .reactionsBundle(), compatibleWith: nil)!
+      if let image = UIImage(named: name, in: .reactionsBundle(),
+                             compatibleWith: nil) {
+        return image
+      }
+      return UIImage()
     }
   }
 }

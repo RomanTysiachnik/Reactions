@@ -34,6 +34,7 @@ import UIKit
  You can configure/skin the button using a `ReactionButtonConfig`.
  */
 public final class ReactionButton: UIReactionControl {
+  private var isSelectingReaction = false
   private let iconImageView: UIImageView = Components.reactionButton.facebookLikeIcon()
   private let titleLabel: UILabel = Components.reactionButton.facebookLikeLabel()
   private lazy var overlay: UIView = UIView().build {
@@ -43,6 +44,14 @@ public final class ReactionButton: UIReactionControl {
 
     $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ReactionButton.dismissReactionSelector)))
   }
+
+  public var isInitObserve: Bool = true
+  public var likeReaction: Reaction = Reaction.facebook.like
+  public var unlikeReaction: Reaction = Reaction.facebook.like
+  public var didTapButton: ((_ sender: ReactionButton) -> Void)?
+  public var didUpdateReaction: ((_ reaction: Reaction?) -> Void)?
+  public var willShowSelector: (() -> Void)?
+  public var didHideSelector: (() -> Void)?
 
   /**
    A Boolean value indicating whether the reaction button is in the selected state.
@@ -108,29 +117,32 @@ public final class ReactionButton: UIReactionControl {
     titleLabel.font = config.font
     titleLabel.text = reaction.title
 
-    let iconSize = min(bounds.width - config.spacing, bounds.height) - config.iconMarging * 2
-    let titleSize = titleLabel.sizeThatFits(CGSize(width: bounds.width - iconSize, height: bounds.height))
+    let configSpacing = (config.hideIcon || config.hideTitle) ? 0 : config.spacing
+    let iconSize = config.hideIcon ? 0
+      : min(bounds.width - configSpacing, bounds.height) - config.iconMarging * 2
+    let titleSize = config.hideTitle ? CGSize.zero
+      : titleLabel.sizeThatFits(CGSize(width: bounds.width - iconSize,
+                                       height: bounds.height))
     var iconFrame = CGRect(x: 0, y: (bounds.height - iconSize) / 2, width: iconSize, height: iconSize)
-    var titleFrame = CGRect(x: iconSize + config.spacing, y: 0, width: titleSize.width, height: bounds.height)
+    var titleFrame = CGRect(x: iconSize + configSpacing, y: 0, width: titleSize.width, height: bounds.height)
 
     if config.alignment == .right {
       iconFrame.origin.x = bounds.width - iconSize
-      titleFrame.origin.x = bounds.width - iconSize - config.spacing - titleSize.width
+      titleFrame.origin.x = bounds.width - iconSize - configSpacing - titleSize.width
     } else if config.alignment == .centerLeft || config.alignment == .centerRight {
-      let emptyWidth = bounds.width - iconFrame.width - titleLabel.bounds.width - config.spacing
+      let emptyWidth = bounds.width - iconFrame.width - titleLabel.bounds.width - configSpacing
 
       if config.alignment == .centerLeft {
         iconFrame.origin.x = emptyWidth / 2
-        titleFrame.origin.x = emptyWidth / 2 + iconSize + config.spacing
+        titleFrame.origin.x = emptyWidth / 2 + iconSize + configSpacing
       } else {
-        iconFrame.origin.x = emptyWidth / 2 + titleSize.width + config.spacing
+        iconFrame.origin.x = emptyWidth / 2 + titleSize.width + configSpacing
         titleFrame.origin.x = emptyWidth / 2
       }
     }
 
     iconImageView.frame = iconFrame
     titleLabel.frame = titleFrame
-
     UIView.transition(with: titleLabel, duration: 0.15, options: .transitionCrossDissolve, animations: { [unowned self] in
       self.iconImageView.tintColor = self.isSelected ? self.reaction.color : self.config.neutralTintColor
       self.titleLabel.textColor = self.isSelected ? self.reaction.color : self.config.neutralTintColor
@@ -145,7 +157,7 @@ public final class ReactionButton: UIReactionControl {
     if isSelected {
       UIView.animateKeyframes(withDuration: 0.3, delay: 0, options: .calculationModeCubic, animations: { [weak self] in
         UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5, animations: {
-          self?.iconImageView.transform = CGAffineTransform(scaleX: 1.8, y: 1.8)
+          self?.iconImageView.transform = CGAffineTransform(scaleX: 1.6, y: 1.6)
         })
         UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
           self?.iconImageView.transform = .identity
@@ -154,6 +166,9 @@ public final class ReactionButton: UIReactionControl {
     }
 
     sendActions(for: .touchUpInside)
+    reaction = isSelected ? likeReaction : unlikeReaction
+    didUpdateReaction?(isSelected ? likeReaction : nil)
+    didTapButton?(self)
   }
 
   private var isLongPressMoved = false
@@ -162,25 +177,27 @@ public final class ReactionButton: UIReactionControl {
   @objc func longPressAction(_ gestureRecognizer: UILongPressGestureRecognizer) {
     guard let selector = reactionSelector, selector.reactions.count > 1 else { return }
     lastTouchedYPosition = gestureRecognizer.location(in: self).y
-
-    if gestureRecognizer.state == .began {
+    
+    switch gestureRecognizer.state {
+    case .began:
       isLongPressMoved = false
-
       displayReactionSelector(feedback: .slideFingerAcross)
-    }
-
-    if gestureRecognizer.state == .changed {
+    case .changed:
       isLongPressMoved = true
-
-      selector.longPressAction(gestureRecognizer)
-    } else if gestureRecognizer.state == .ended {
+      _ = selector.longPressAction(gestureRecognizer)
+    case .ended:
       if isLongPressMoved {
-        selector.longPressAction(gestureRecognizer)
-
-        dismissReactionSelector()
+        let isPointInside = selector.longPressAction(gestureRecognizer)
+        if isPointInside {
+          dismissReactionSelector()
+        } else {
+          selector.feedback = .tapToSelectAReaction
+        }
       } else {
         selector.feedback = .tapToSelectAReaction
       }
+    default:
+      break
     }
   }
 
@@ -220,53 +237,63 @@ public final class ReactionButton: UIReactionControl {
    Dismisses the attached reaction selector that was presented by the button.
    */
   @objc public func dismissReactionSelector() {
+    guard isSelectingReaction else { return }
+    isSelectingReaction = false
     reactionSelector?.feedback = nil
-
+    didHideSelector?()
     animateOverlay(alpha: 0, center: CGPoint(x: overlay.bounds.midX, y: overlay.bounds.midY))
   }
 
   private func displayReactionSelector(feedback: ReactionFeedback) {
-    guard let selector = reactionSelector, let window = UIApplication.shared.keyWindow, selector.reactions.count > 1 else { return }
+    guard let selector = reactionSelector,
+      let window = UIApplication.shared.keyWindow,
+      selector.reactions.count > 1 else { return }
+    
+    isSelectingReaction = true
+    willShowSelector?()
 
     if overlay.superview == nil {
-      UIApplication.shared.keyWindow?.addSubview(overlay)
+      window.addSubview(overlay)
     }
 
     overlay.frame = CGRect(x: 0, y: 0, width: window.bounds.width, height: window.bounds.height * 2)
+    
+    let centerPoint = convert(CGPoint(x: bounds.midX, y: 0), to: nil)
 
-    var y = lastTouchedYPosition - 50
-    if y < window.frame.origin.y {
-      y = lastTouchedYPosition + 50
-    }
-
-    let centerPoint = convert(CGPoint(x: bounds.midX, y: y), to: nil)
     selector.frame = selector.boundsToFit()
     
     switch config.alignment {
     case .left:
       selector.center = CGPoint(
-        x: centerPoint.x + (selector.bounds.width - bounds.width) / 2, y: centerPoint.y)
+        x: centerPoint.x + (selector.bounds.width - bounds.width) / 2,
+        y: centerPoint.y + config.selectorOffset + bounds.height / 2)
     case .right:
       selector.center = CGPoint(
-        x: centerPoint.x - (selector.bounds.width - bounds.width) / 2, y: centerPoint.y)
+        x: centerPoint.x - (selector.bounds.width - bounds.width) / 2,
+        y: centerPoint.y + config.selectorOffset + bounds.height / 2)
     default:
       selector.center = centerPoint
     }
-
-    if selector.frame.origin.x - config.spacing < 0 {
+    
+    if selector.frame.origin.x - config.safeSelectorMargin < 0 {
       selector.center = CGPoint(
-        x: selector.center.x - selector.frame.origin.x + config.spacing,
-        y: centerPoint.y)
-    } else if selector.frame.origin.x + selector.frame.width + config.spacing > overlay.bounds.width {
+        x: selector.center.x - selector.frame.origin.x + config.safeSelectorMargin,
+        y: centerPoint.y + config.selectorOffset + bounds.height / 2)
+    } else if selector.frame.origin.x + selector.frame.width + config.safeSelectorMargin > overlay.bounds.width {
       selector.center = CGPoint(
         x: selector.center.x
-          - (selector.frame.origin.x + selector.frame.width + config.spacing - overlay.bounds.width),
-        y: centerPoint.y)
+          - (selector.frame.origin.x + selector.frame.width + config.safeSelectorMargin - overlay.bounds.width),
+        y: centerPoint.y + config.selectorOffset + bounds.height / 2)
     }
-
+    
     selector.feedback = feedback
-
-    animateOverlay(alpha: 1, center: CGPoint(x: overlay.bounds.midX, y: overlay.bounds.midY - selector.bounds.height))
+    if selector.frame.origin.y - config.safeSelectorMargin < 0 {
+      animateOverlay(alpha: 1, center: CGPoint(
+        x: overlay.bounds.midX, y: overlay.bounds.midY + selector.bounds.height + bounds.height))
+    } else {
+      animateOverlay(alpha: 1, center: CGPoint(x
+        : overlay.bounds.midX, y: overlay.bounds.midY - selector.bounds.height))
+    }
   }
 
   private func animateOverlay(alpha: CGFloat, center: CGPoint) {

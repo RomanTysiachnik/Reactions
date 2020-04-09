@@ -20,13 +20,18 @@ final class ReactionCellView: UITableViewCell {
   @IBOutlet var facebookReactionButton: ReactionButton! {
     didSet {
       facebookReactionButton.reactionSelector = ReactionSelector()
-      facebookReactionButton.config = ReactionButtonConfig {
-        $0.iconMarging = 8
-        $0.spacing = 4
-        $0.font = UIFont(name: "HelveticaNeue", size: 14)
-        $0.neutralTintColor = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
-        $0.alignment = .left
+      facebookReactionButton.reactionSelector?.config = ReactionSelectorConfig {
+        $0.showLabels = false
+        $0.iconSize = 36
+        $0.spacing = 7
       }
+      facebookReactionButton.config = ReactionButtonConfig {
+        $0.spacing = 8
+        $0.font = UIFont(name: "HelveticaNeue", size: 15)
+        $0.neutralTintColor = .lightGray
+        $0.alignment = .centerLeft
+      }
+      facebookReactionButton.willShowSelector = feedback
 
       facebookReactionButton.reactionSelector?.feedbackDelegate = self
     }
@@ -37,11 +42,11 @@ final class ReactionCellView: UITableViewCell {
       reactionSummary.reactions = Reaction.facebook.all
       reactionSummary.setDefaultText(withTotalNumberOfPeople: 4, includingYou: true)
       reactionSummary.config = ReactionSummaryConfig {
-        $0.spacing = 8
-        $0.iconMarging = 2
+        $0.spacing = 7
+        $0.iconMarging = 6
         $0.font = UIFont(name: "HelveticaNeue", size: 12)
         $0.textColor = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
-        $0.alignment = .left
+        $0.alignment = .centerLeft
         $0.isAggregated = true
       }
     }
@@ -52,6 +57,18 @@ final class ReactionCellView: UITableViewCell {
       feedbackLabel.isHidden = true
     }
   }
+  
+  private let generator: UISelectionFeedbackGenerator = {
+    let generator = UISelectionFeedbackGenerator()
+    generator.prepare()
+    return generator
+  }()
+  
+  fileprivate func feedback() {
+    generator.selectionChanged()
+    generator.prepare()
+  }
+
 
   // Actions
 
@@ -68,8 +85,11 @@ final class ReactionCellView: UITableViewCell {
 
 extension ReactionCellView: ReactionFeedbackDelegate {
   func reactionFeedbackDidChanged(_ feedback: ReactionFeedback?) {
-    feedbackLabel.isHidden = feedback == nil
+    feedbackLabel.isHidden = true
 
     feedbackLabel.text = feedback?.localizedString
+  }
+  func didScrolledToNextReaction() {
+    feedback()
   }
 }

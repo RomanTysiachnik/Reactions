@@ -48,6 +48,18 @@ public final class ReactionButtonConfig: Configurable {
   /// The color of the text (and image) when no reaction is selected.
   public var neutralTintColor: UIColor = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
 
+  /// Boolean value to show or hide reaction button icon.
+  public var hideIcon: Bool = false
+
+  /// Boolean value to show or hide reaction button title.
+  public var hideTitle: Bool = false
+
+  /// The margin between selector and screen.
+  public var safeSelectorMargin: CGFloat = 20
+  
+  /// The offset between the selector and button
+  public var selectorOffset: CGFloat = 12
+
   /**
    The technique to use for aligning the icon and the text.
 

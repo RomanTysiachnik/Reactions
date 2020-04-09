@@ -13,7 +13,12 @@ class ViewController: UIViewController {
   @IBOutlet var reactionButton: ReactionButton! {
     didSet {
       reactionButton.config = ReactionButtonConfig {
+        $0.iconMarging = 8
+        $0.spacing = 7
+        $0.font = .systemFont(ofSize: 15, weight: .bold)
+        $0.neutralTintColor = .gray
         $0.alignment = .centerLeft
+        $0.hideTitle = true
       }
     }
   }

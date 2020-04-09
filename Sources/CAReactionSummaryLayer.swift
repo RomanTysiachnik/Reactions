@@ -52,14 +52,14 @@ final class CAReactionSummaryLayer: CALayer {
       }
     }
   }
-
+  
   private var reactionPairs: [(Reaction, Int)] = [] {
     didSet {
       reactionsLayers = reactionPairs.map {
         let iconLayer = CALayer()
         iconLayer.contents = $0.0.icon.cgImage
-        iconLayer.masksToBounds = true
-        iconLayer.borderColor = config.iconBorderColor.cgColor
+        iconLayer.masksToBounds = false
+        iconLayer.borderColor = config.iconBorderColor?.cgColor
         iconLayer.borderWidth = config.iconBorderWidth
         iconLayer.contentsScale = UIScreen.main.scale
 
@@ -120,7 +120,6 @@ final class CAReactionSummaryLayer: CALayer {
     }
 
     iconLayer.frame = iconFrame
-
     if config.isIconRounded {
       iconLayer.cornerRadius = iconFrame.height / 2
     }
