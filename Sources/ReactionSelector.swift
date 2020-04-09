@@ -28,18 +28,18 @@ import UIKit
 
 /**
  A `ReactionSelector` object is a horizontal control made of multiple reactions, each reaction functioning as a discrete button. A select control affords a compact means to group together a number of reactions.
- 
+
  The `ReactionSelector` class declares a property to control its selected reaction. When the user manipulates the selector a `valueChanged` event is generated, which results in the control (if properly configured) sending an action message.
 
  The `ReactionSelector` object automatically resizes reactions using the `iconSize` and `spacing` values defined in the `config` property.
- 
+
  You can configure/skin the button using a `ReactionSelectorConfig`.
  */
 public final class ReactionSelector: UIReactionControl {
   private var reactionIconLayers: [CALayer] = []
-  private var reactionLabels: [UILabel]     = []
-  private let backgroundLayer               = Components.reactionSelect.backgroundLayer()
-  private var _reactions: [Reaction]        = Reaction.facebook.all
+  private var reactionLabels: [UILabel] = []
+  private let backgroundLayer = Components.reactionSelect.backgroundLayer()
+  private var _reactions: [Reaction] = Reaction.facebook.all
 
   /**
    The reactions available in the selector.
@@ -51,7 +51,7 @@ public final class ReactionSelector: UIReactionControl {
 
   /**
    Sets the selector reactions and update the frame to fit if necessary.
-   
+
    - Parameter reactions: The reactions to choose in the selector.
    - Parameter sizeToFit: Flag to tell the receiver to update its frame to fit. False by default.
    */
@@ -91,8 +91,7 @@ public final class ReactionSelector: UIReactionControl {
     set {
       if let reaction = newValue, config.stickyReaction {
         stateHighlightedReactionIndex = reactions.firstIndex(of: reaction)
-      }
-      else {
+      } else {
         stateHighlightedReactionIndex = nil
       }
 
@@ -109,20 +108,20 @@ public final class ReactionSelector: UIReactionControl {
     reactionLabels.forEach { $0.removeFromSuperview() }
 
     reactionIconLayers = reactions.map { Components.reactionSelect.reactionIcon(option: $0) }
-    reactionLabels     = reactions.map { Components.reactionSelect.reactionLabel(option: $0, height: config.spacing * 4) }
+    reactionLabels = reactions.map { Components.reactionSelect.reactionLabel(option: $0, height: config.spacing * 4) }
 
     if backgroundLayer.superlayer == nil {
       addGestureRecognizer(UILongPressGestureRecognizer().build {
         $0.addTarget(self, action: #selector(ReactionSelector.longPressAction))
         $0.minimumPressDuration = 0
       })
-      
+
       let backgroundBounds = boundsToFit()
       backgroundLayer.path = UIBezierPath(roundedRect: backgroundBounds, cornerRadius: backgroundBounds.height / 2).cgPath
-      
+
       layer.addSublayer(backgroundLayer)
     }
-    
+
     backgroundLayer.fillColor = config.backgroundFillColor
 
     reactionIconLayers.forEach { layer.addSublayer($0) }
@@ -133,7 +132,7 @@ public final class ReactionSelector: UIReactionControl {
 
   override func update() {
     let backgroundBounds = config.computedBounds(bounds, highlighted: stateHighlightedReactionIndex != nil)
-    let backgroundPath   = UIBezierPath(roundedRect: backgroundBounds, cornerRadius: backgroundBounds.height / 2).cgPath
+    let backgroundPath = UIBezierPath(roundedRect: backgroundBounds, cornerRadius: backgroundBounds.height / 2).cgPath
 
     CATransaction.begin()
     CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut))
@@ -142,15 +141,15 @@ public final class ReactionSelector: UIReactionControl {
     }
 
     let pathAnimation = CABasicAnimation(keyPath: "path").build {
-      $0.toValue               = backgroundPath
-      $0.fillMode              = CAMediaTimingFillMode.both
+      $0.toValue = backgroundPath
+      $0.fillMode = CAMediaTimingFillMode.both
       $0.isRemovedOnCompletion = false
     }
 
     backgroundLayer.add(pathAnimation, forKey: "morhingPath")
 
     backgroundLayer.fillColor = config.backgroundFillColor
-    
+
     for index in 0 ..< reactionIconLayers.count {
       updateReactionAtIndex(index, highlighted: stateHighlightedReactionIndex == index)
     }
@@ -159,17 +158,17 @@ public final class ReactionSelector: UIReactionControl {
   }
 
   private func updateReactionAtIndex(_ index: Int, highlighted isHighlighted: Bool) {
-    let icon: CALayer                    = reactionIconLayers[index]
-    let label: UILabel                   = reactionLabels[index]
-    let labelAlpha: CGFloat              = isHighlighted ? 1 : 0
+    let icon: CALayer = reactionIconLayers[index]
+    let label: UILabel = reactionLabels[index]
+    let labelAlpha: CGFloat = isHighlighted ? 1 : 0
     let labelTranform: CGAffineTransform = isHighlighted ? .identity : CGAffineTransform(scaleX: 0.5, y: 0.5)
 
     icon.frame = config.computedIconFrameAtIndex(index, in: bounds, reactionCount: reactions.count, highlightedIndex: stateHighlightedReactionIndex)
 
     UIView.animate(withDuration: CATransaction.animationDuration(), delay: 0, options: .curveEaseIn, animations: { [unowned self] in
-      label.alpha     = labelAlpha
+      label.alpha = labelAlpha
       label.transform = labelTranform
-      label.center    = CGPoint(x: icon.frame.midX, y: icon.frame.minY - label.bounds.height / 2 - self.config.spacing)
+      label.center = CGPoint(x: icon.frame.midX, y: icon.frame.minY - label.bounds.height / 2 - self.config.spacing)
       }, completion: nil)
   }
 
@@ -191,13 +190,13 @@ public final class ReactionSelector: UIReactionControl {
   // MARK: - Responding to Gesture Events
 
   @objc func longPressAction(_ gestureRecognizer: UIGestureRecognizer) {
-    let location    = gestureRecognizer.location(in: self)
-    let touchIndex  = optionIndexFromPoint(location)
+    let location = gestureRecognizer.location(in: self)
+    let touchIndex = optionIndexFromPoint(location)
     let needsUpdate = touchIndex != stateHighlightedReactionIndex
 
     if needsUpdate {
       stateHighlightedReactionIndex = touchIndex
-      stateSelectedReaction         = touchIndex == nil ? nil : reactions[touchIndex!]
+      stateSelectedReaction = touchIndex == nil ? nil : reactions[touchIndex!]
 
       setNeedsLayout()
 
@@ -212,13 +211,12 @@ public final class ReactionSelector: UIReactionControl {
       if needsUpdate {
         let isInside = isPointInsideExtendedBounds(location)
 
-        feedback = isInside ? .slideFingerAcross: .releaseToCancel
-        
+        feedback = isInside ? .slideFingerAcross : .releaseToCancel
+
         sendActions(for: isInside ? .touchDragEnter : .touchDragExit)
       }
-    }
-    else if gestureRecognizer.state != .changed {
-      if gestureRecognizer.state == .ended && !config.stickyReaction {
+    } else if gestureRecognizer.state != .changed {
+      if gestureRecognizer.state == .ended, !config.stickyReaction {
         stateHighlightedReactionIndex = nil
       }
 
@@ -241,7 +239,7 @@ public final class ReactionSelector: UIReactionControl {
   private func optionIndexFromPoint(_ location: CGPoint) -> Int? {
     if isPointInsideExtendedBounds(location) {
       for (index, o) in reactionIconLayers.enumerated() {
-        if o.frame.origin.x <= location.x && location.x <= (o.frame.origin.x + o.frame.width) {
+        if o.frame.origin.x <= location.x, location.x <= (o.frame.origin.x + o.frame.width) {
           return index
         }
       }

@@ -27,10 +27,10 @@
 import CoreText
 import UIKit
 
-fileprivate extension CATextLayer {
+private extension CATextLayer {
   func layoutWithConfig(_ config: ReactionSummaryConfig) {
-    font            = config.font
-    fontSize        = config.font.pointSize
+    font = config.font
+    fontSize = config.font.pointSize
     foregroundColor = config.textColor.cgColor
   }
 }
@@ -55,30 +55,30 @@ final class CAReactionSummaryLayer: CALayer {
 
   private var reactionPairs: [(Reaction, Int)] = [] {
     didSet {
-      reactionsLayers = reactionPairs.map({
-        let iconLayer           = CALayer()
-        iconLayer.contents      = $0.0.icon.cgImage
+      reactionsLayers = reactionPairs.map {
+        let iconLayer = CALayer()
+        iconLayer.contents = $0.0.icon.cgImage
         iconLayer.masksToBounds = true
-        iconLayer.borderColor   = config.iconBorderColor.cgColor
-        iconLayer.borderWidth   = config.iconBorderWidth
+        iconLayer.borderColor = config.iconBorderColor.cgColor
+        iconLayer.borderWidth = config.iconBorderWidth
         iconLayer.contentsScale = UIScreen.main.scale
 
-        let textLayer           = CATextLayer()
-        textLayer.string        = "\($0.1)"
+        let textLayer = CATextLayer()
+        textLayer.string = "\($0.1)"
         textLayer.contentsScale = UIScreen.main.scale
 
         return (iconLayer, textLayer)
-      })
+      }
     }
   }
 
   var reactions: [Reaction] = [] {
     didSet {
-      reactionPairs = reactions.uniq().map({ reaction in
-        let reactionCount = reactions.filter({ $0 == reaction }).count
+      reactionPairs = reactions.uniq().map { reaction in
+        let reactionCount = reactions.filter { $0 == reaction }.count
 
         return (reaction, reactionCount)
-      })
+      }
     }
   }
 
@@ -89,7 +89,7 @@ final class CAReactionSummaryLayer: CALayer {
   }
 
   // MARK: - Providing the Layer’s Content
-  
+
   override func draw(in ctx: CGContext) {
     super.draw(in: ctx)
 
@@ -103,12 +103,12 @@ final class CAReactionSummaryLayer: CALayer {
   }
 
   private func updateIconLayer(_ iconLayer: CALayer, textLayer: CATextLayer, in rect: CGRect) {
-    var iconFrame        = rect
+    var iconFrame = rect
     iconFrame.size.width = iconFrame.height
 
-    let textSize         = sizeForText(textLayer.string as! String)
-    var textFrame        = rect
-    textFrame.origin.y   += (rect.height - textSize.height) / 2
+    let textSize = sizeForText(textLayer.string as! String)
+    var textFrame = rect
+    textFrame.origin.y += (rect.height - textSize.height) / 2
     textFrame.size.width = textFrame.width - iconFrame.height
 
     switch config.alignment {
@@ -119,8 +119,8 @@ final class CAReactionSummaryLayer: CALayer {
       iconFrame.origin.x = bounds.width - iconFrame.origin.x - rect.width + textFrame.width
     }
 
-    iconLayer.frame        = iconFrame
-    
+    iconLayer.frame = iconFrame
+
     if config.isIconRounded {
       iconLayer.cornerRadius = iconFrame.height / 2
     }
@@ -131,7 +131,7 @@ final class CAReactionSummaryLayer: CALayer {
 
   func sizeToFit() -> CGSize {
     let lastReactionFrame = reactionFrameAt(reactionPairs.count - 1)
-    let width: CGFloat    = lastReactionFrame.origin.x + lastReactionFrame.width
+    let width: CGFloat = lastReactionFrame.origin.x + lastReactionFrame.width
 
     return CGSize(width: width, height: bounds.height)
   }
@@ -146,11 +146,11 @@ final class CAReactionSummaryLayer: CALayer {
     }
 
     let previousReactionFrame = reactionFrameAt(index - 1)
-    let reactionPair          = reactionPairs[index]
+    let reactionPair = reactionPairs[index]
 
     let textSize = sizeForText("\(reactionPair.1)")
-    var offsetX  = previousReactionFrame.origin.x + previousReactionFrame.width
-    offsetX      = offsetX > 0 ? offsetX + config.spacing : 0
+    var offsetX = previousReactionFrame.origin.x + previousReactionFrame.width
+    offsetX = offsetX > 0 ? offsetX + config.spacing : 0
 
     return CGRect(x: offsetX, y: config.iconMarging, width: iconHeight + textSize.width, height: iconHeight)
   }
@@ -158,8 +158,8 @@ final class CAReactionSummaryLayer: CALayer {
   private func sizeForText(_ text: String) -> CGSize {
     let attributedText = NSAttributedString(string: text, attributes: [
       NSAttributedString.Key.font: config.font!,
-      NSAttributedString.Key.foregroundColor: config.textColor!
-      ])
+      NSAttributedString.Key.foregroundColor: config.textColor!,
+    ])
 
     return attributedText.size()
   }

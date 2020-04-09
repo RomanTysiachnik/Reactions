@@ -46,7 +46,7 @@ public struct Reaction {
 
   /**
    The reaction's alternative icon image.
-   
+
    The alternative icon is only used by the `ReactionButton`. It tries to display the alternative as icon and if it fails it uses the `icon`.
    */
   public let alternativeIcon: UIImage?
@@ -62,17 +62,17 @@ public struct Reaction {
    - Returns: Newly initialized reaction with the specified properties.
    */
   public init(id: String, title: String, color: UIColor, icon: UIImage, alternativeIcon: UIImage? = nil) {
-    self.id              = id
-    self.title           = title
-    self.color           = color
-    self.icon            = icon
+    self.id = id
+    self.title = title
+    self.color = color
+    self.icon = icon
     self.alternativeIcon = alternativeIcon
   }
 }
 
 extension Reaction: Equatable {
   /// Returns a Boolean value indicating whether two values are equal.
-  public static func ==(lhs: Reaction, rhs: Reaction) -> Bool {
+  public static func == (lhs: Reaction, rhs: Reaction) -> Bool {
     return lhs.id == rhs.id
   }
 }

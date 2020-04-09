@@ -27,7 +27,7 @@
 /**
  The delegate of a `ReactionSelector` object should adopt the `ReactionFeedbackDelegate` protocol. It allows the delegate to know in which state the selector is.
  */
-public protocol ReactionFeedbackDelegate: class {
+public protocol ReactionFeedbackDelegate: AnyObject {
   /**
    Tells the delegate that the feedback did changed.
 

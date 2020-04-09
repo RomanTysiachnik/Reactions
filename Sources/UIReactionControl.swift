@@ -28,10 +28,10 @@ import UIKit
 
 /**
  The `UIReactionControl` class implements common behavior for reaction elements. It mainly defines two methods:
- 
+
  - `setup`: Manage the view hierarchy by adding and/or removing elements.
  - `update`: Layout the view hierarchy and update state.
- 
+
  You should override these methods if you subclass the `UIReactionControl`.
  */
 public class UIReactionControl: UIControl {

@@ -47,18 +47,18 @@ public final class ReactionSummaryConfig: Configurable {
 
   /// The color of the text.
   public var textColor: UIColor! = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
-    
+
   /// The color of the border icon.
   public var iconBorderColor: UIColor! = UIColor.white
-      
+
   /// The width of the border icon.
   public var iconBorderWidth: CGFloat = 2
-    
+
   /**
-     A Boolean value to round or not each icon.
-       
-     The default value is true.
-  */
+   A Boolean value to round or not each icon.
+
+   The default value is true.
+   */
   public var isIconRounded: Bool = true
 
   /**
@@ -72,7 +72,7 @@ public final class ReactionSummaryConfig: Configurable {
    A Boolean value that indicates whether the summary should aggregate the reactions into one total indicator.
 
    The default value is true.
-  */
+   */
   public var isAggregated: Bool = true
 
   // MARK: - Initializing a Reaction Summary

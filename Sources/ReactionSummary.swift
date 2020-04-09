@@ -32,7 +32,7 @@ import UIKit
  You can configure/skin the summary using a `ReactionSummaryConfig`.
  */
 public final class ReactionSummary: UIReactionControl {
-  private let textLabel    = UILabel()
+  private let textLabel = UILabel()
   private var summaryLayer = CAReactionSummaryLayer()
 
   /**
@@ -70,17 +70,17 @@ public final class ReactionSummary: UIReactionControl {
 
   /**
    Convenient method to set a default localized text in order to display the given total number of people including you.
-   
+
    For example:
    ```
    let summary = ReactionSummary()
-   
+
    summary.setDefaultText(withTotalNumberOfPeople: 3, includingYou: false)
-   
+
    print(summary.text) // 3
-   
+
    summary.setDefaultText(withTotalNumberOfPeople: 3, includingYou: true)
-   
+
    print(summary.text) // You and 2 others
    ```
 
@@ -91,13 +91,12 @@ public final class ReactionSummary: UIReactionControl {
     let localizedFormat: String
     let total: Int
 
-    if includingYou && peopleNumber > 0 {
+    if includingYou, peopleNumber > 0 {
       localizedFormat = "summary.you".localized(from: "ReactionSummaryLocalizable")
-      total           = Int(peopleNumber - 1)
-    }
-    else {
+      total = Int(peopleNumber - 1)
+    } else {
       localizedFormat = "summary.other".localized(from: "ReactionSummaryLocalizable")
-      total           = Int(peopleNumber)
+      total = Int(peopleNumber)
     }
 
     text = String.localizedStringWithFormat(localizedFormat, total)
@@ -129,9 +128,9 @@ public final class ReactionSummary: UIReactionControl {
   }
 
   private func updateComponentConfig() {
-    textLabel.font      = config.font
+    textLabel.font = config.font
     textLabel.textColor = config.textColor
-    summaryLayer.frame  = bounds
+    summaryLayer.frame = bounds
     summaryLayer.config = config
 
     switch config.alignment {
@@ -143,38 +142,38 @@ public final class ReactionSummary: UIReactionControl {
   }
 
   private func updateComponentFrame() {
-    let textLabelSize    = textLabel.sizeThatFits(bounds.size)
+    let textLabelSize = textLabel.sizeThatFits(bounds.size)
     let summaryLayerSize = summaryLayer.sizeToFit()
 
     let textLabelX: CGFloat
     let summaryLayerX: CGFloat
 
     let textLabelWidth = min(textLabelSize.width, bounds.width - summaryLayerSize.width - config.spacing)
-    let margin         = (bounds.width - (summaryLayerSize.width + config.spacing + textLabelWidth)) / 2
+    let margin = (bounds.width - (summaryLayerSize.width + config.spacing + textLabelWidth)) / 2
 
     switch config.alignment {
     case .left:
       summaryLayerX = 0
-      textLabelX    = summaryLayerSize.width + config.spacing
+      textLabelX = summaryLayerSize.width + config.spacing
     case .right:
       summaryLayerX = bounds.width - summaryLayerSize.width
-      textLabelX    = bounds.width - summaryLayerSize.width - config.spacing - textLabelWidth
+      textLabelX = bounds.width - summaryLayerSize.width - config.spacing - textLabelWidth
     case .centerLeft:
       summaryLayerX = margin
-      textLabelX    = margin + textLabelWidth + config.spacing
+      textLabelX = margin + textLabelWidth + config.spacing
     case .centerRight:
       summaryLayerX = margin + textLabelWidth + config.spacing
-      textLabelX    = margin
+      textLabelX = margin
     }
 
-    textLabel.frame    = CGRect(x: textLabelX, y: 0, width: textLabelWidth, height: bounds.height)
+    textLabel.frame = CGRect(x: textLabelX, y: 0, width: textLabelWidth, height: bounds.height)
     summaryLayer.frame = CGRect(x: summaryLayerX, y: 0, width: summaryLayerSize.width, height: bounds.height)
-    sizeToFit          = textLabel.frame.union(summaryLayer.frame).size
+    sizeToFit = textLabel.frame.union(summaryLayer.frame).size
   }
 
   // MARK: - Responding to Gesture Events
 
-  @objc func tapAction(_ gestureRecognizer: UITapGestureRecognizer) {
+  @objc func tapAction(_: UITapGestureRecognizer) {
     sendActions(for: .touchUpInside)
   }
 }

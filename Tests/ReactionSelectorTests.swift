@@ -24,8 +24,8 @@
  *
  */
 
-import XCTest
 @testable import Reactions
+import XCTest
 
 class ReactionSelectorTests: XCTestCase {
   func testSetConfig() {

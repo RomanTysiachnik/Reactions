@@ -24,8 +24,8 @@
  *
  */
 
-import XCTest
 @testable import Reactions
+import XCTest
 
 class ReactionSummaryTests: XCTestCase {
   func testInit() {
@@ -37,7 +37,7 @@ class ReactionSummaryTests: XCTestCase {
   }
 
   func testSetReactions() {
-    let summary    = ReactionSummary()
+    let summary = ReactionSummary()
     summary.reactions = Reaction.facebook.all
 
     XCTAssertEqual(summary.reactions.count, 6)
@@ -48,9 +48,9 @@ class ReactionSummaryTests: XCTestCase {
   }
 
   func testSetConfig() {
-    let summary       = ReactionSummary()
+    let summary = ReactionSummary()
     summary.reactions = Reaction.facebook.all
-    summary.config    = ReactionSummaryConfig {
+    summary.config = ReactionSummaryConfig {
       $0.alignment = .right
     }
 
@@ -73,7 +73,7 @@ class ReactionSummaryTests: XCTestCase {
     class Target {
       var count = 0
 
-      @objc func incCountAction(_ sender: AnyObject) {
+      @objc func incCountAction(_: AnyObject) {
         count += 1
       }
     }

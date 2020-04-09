@@ -37,7 +37,7 @@ public final class ReactionButtonConfig: Configurable {
   public typealias ConfigurableBlock = (ReactionButtonConfig) -> Void
 
   /// The spacing between the icon and the text.
-  public var spacing: CGFloat     = 8
+  public var spacing: CGFloat = 8
 
   /// The marging between the icon and border.
   public var iconMarging: CGFloat = 4

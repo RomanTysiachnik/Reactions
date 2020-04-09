@@ -24,8 +24,8 @@
  *
  */
 
-import XCTest
 @testable import Reactions
+import XCTest
 
 class ReactionSelectorConfigTests: XCTestCase {
   func testComputedIconSize() {
@@ -56,12 +56,12 @@ class ReactionSelectorConfigTests: XCTestCase {
 
     XCTAssertEqual(f1, CGRect(x: config.spacing, y: config.spacing, width: config.defaultIconSize, height: config.defaultIconSize))
 
-    let f2                        = config.computedIconFrameAtIndex(0, in: bounds, reactionCount: 6, highlightedIndex: 0)
+    let f2 = config.computedIconFrameAtIndex(0, in: bounds, reactionCount: 6, highlightedIndex: 0)
     let selectedIconSize: CGFloat = 82
 
     XCTAssertEqual(f2, CGRect(x: 0, y: bounds.height - selectedIconSize - config.spacing, width: selectedIconSize, height: selectedIconSize))
 
-    let f3                  = config.computedIconFrameAtIndex(0, in: bounds, reactionCount: 6, highlightedIndex: 2)
+    let f3 = config.computedIconFrameAtIndex(0, in: bounds, reactionCount: 6, highlightedIndex: 2)
     let highlightedIconSize = config.computedIconSize(highlighted: true)
 
     XCTAssertEqual(f3, CGRect(x: config.spacing, y: config.spacing * 2, width: highlightedIconSize, height: highlightedIconSize))
@@ -75,7 +75,7 @@ class ReactionSelectorConfigTests: XCTestCase {
     let config = ReactionSelectorConfig()
 
     let bounds = ReactionSelector().boundsToFit()
-    
+
     XCTAssertEqual(config.computedBounds(bounds, highlighted: false), bounds)
     XCTAssertEqual(config.computedBounds(bounds, highlighted: true), CGRect(x: 0, y: config.spacing, width: bounds.width, height: bounds.height - config.spacing))
   }

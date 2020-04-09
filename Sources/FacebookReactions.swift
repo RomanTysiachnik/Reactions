@@ -66,12 +66,12 @@ extension Reaction {
     // MARK: - Convenience Methods
 
     private static func reactionWithId(_ id: String) -> Reaction {
-      var color: UIColor            = .black
-      var alternativeIcon: UIImage? = nil
+      var color: UIColor = .black
+      var alternativeIcon: UIImage?
 
       switch id {
       case "like":
-        color           = UIColor(red: 0.29, green: 0.54, blue: 0.95, alpha: 1)
+        color = UIColor(red: 0.29, green: 0.54, blue: 0.95, alpha: 1)
         alternativeIcon = imageWithName("like-template").withRenderingMode(.alwaysTemplate)
       case "love":
         color = UIColor(red: 0.93, green: 0.23, blue: 0.33, alpha: 1)

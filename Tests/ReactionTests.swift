@@ -24,8 +24,8 @@
  *
  */
 
-import XCTest
 @testable import Reactions
+import XCTest
 
 class ReactionTests: XCTestCase {
   func testFacebookReaction() {
@@ -36,7 +36,7 @@ class ReactionTests: XCTestCase {
   }
 
   func testReactionInit() {
-    let icon         = UIImage(named: "like", in: .reactionsBundle(), compatibleWith: nil)!
+    let icon = UIImage(named: "like", in: .reactionsBundle(), compatibleWith: nil)!
     let likeReaction = Reaction(id: "like", title: "Like", color: .red, icon: icon)
 
     XCTAssertEqual(likeReaction.id, "like")

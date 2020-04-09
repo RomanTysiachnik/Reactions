@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
   name: "Reactions",
   platforms: [
-    .iOS(.v11)
+    .iOS(.v11),
   ],
   products: [
     .library(name: "Reactions", targets: ["Reactions"]),
@@ -13,12 +13,12 @@ let package = Package(
     .target(
       name: "Reactions",
       dependencies: [],
-      path: "Sources"),
+      path: "Sources"
+    ),
     .testTarget(
       name: "ReactionsTests",
       dependencies: ["Reactions"],
-      path: "Tests"),
+      path: "Tests"
+    ),
   ]
 )
-
-

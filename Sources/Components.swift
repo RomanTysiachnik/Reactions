@@ -37,29 +37,29 @@ struct Components {
 
     static func reactionLabel(option: Reaction, height: CGFloat) -> UILabel {
       let title = option.title
-      let font  = UIFont(name: "HelveticaNeue", size: 10) ?? .systemFont(ofSize: 10)
+      let font = UIFont(name: "HelveticaNeue", size: 10) ?? .systemFont(ofSize: 10)
 
-      let size       = CGSize(width: 200, height: 200)
+      let size = CGSize(width: 200, height: 200)
       let attributes = [NSAttributedString.Key.font: font] as [NSAttributedString.Key: Any]
-      let bounds     = title.boundingRect(with: size, options: [], attributes: attributes, context: nil)
+      let bounds = title.boundingRect(with: size, options: [], attributes: attributes, context: nil)
 
       return UILabel().build {
-        $0.text                = title
-        $0.font                = font
-        $0.textAlignment       = .center
-        $0.textColor           = .white
-        $0.backgroundColor     = UIColor(white: 0, alpha: 0.7)
-        $0.alpha               = 0
-        $0.frame               = CGRect(x: 0, y: 0, width: bounds.width + height / 2, height: height)
+        $0.text = title
+        $0.font = font
+        $0.textAlignment = .center
+        $0.textColor = .white
+        $0.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        $0.alpha = 0
+        $0.frame = CGRect(x: 0, y: 0, width: bounds.width + height / 2, height: height)
         $0.layer.masksToBounds = true
-        $0.layer.cornerRadius  = height / 2
+        $0.layer.cornerRadius = height / 2
       }
     }
 
     static func backgroundLayer() -> CAShapeLayer {
       return CAShapeLayer().build {
-        $0.fillColor     = UIColor.white.cgColor
-        $0.shadowOffset  = CGSize(width: 0, height: 1)
+        $0.fillColor = UIColor.white.cgColor
+        $0.shadowOffset = CGSize(width: 0, height: 1)
         $0.shadowOpacity = 0.1
       }
     }
@@ -74,8 +74,8 @@ struct Components {
 
     static func facebookLikeLabel() -> UILabel {
       return UILabel().build {
-        $0.font          = UIFont(name: "HelveticaNeue", size: 16)
-        $0.textColor     = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
+        $0.font = UIFont(name: "HelveticaNeue", size: 16)
+        $0.textColor = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
       }
     }
   }

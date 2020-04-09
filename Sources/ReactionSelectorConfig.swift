@@ -40,11 +40,11 @@ public final class ReactionSelectorConfig: Configurable {
   public var spacing: CGFloat = 6
 
   /// The icon size when the selector is inactive.
-  public var iconSize: CGFloat? = nil
+  public var iconSize: CGFloat?
 
   /// Boolean value to know whether the reactions needs to be sticked when they are selected.
   public var stickyReaction: Bool = false
-    
+
   /// The fill color of the reaction selector.
   public var backgroundFillColor: CGColor = UIColor.white.cgColor
 
@@ -84,16 +84,15 @@ public final class ReactionSelectorConfig: Configurable {
   /// Returns the icon frame
   final func computedIconFrameAtIndex(_ index: Int, in bounds: CGRect, reactionCount: Int, highlightedIndex: Int?) -> CGRect {
     let isHighlighted = highlightedIndex != nil
-    let fi            = CGFloat(index)
-    let topMargin     = isHighlighted ? spacing * 2 : spacing
-    let iconSize      = computedIconSize(highlighted: isHighlighted)
+    let fi = CGFloat(index)
+    let topMargin = isHighlighted ? spacing * 2 : spacing
+    let iconSize = computedIconSize(highlighted: isHighlighted)
 
     if let hi = highlightedIndex, index == hi {
       let highlightedSize = computedHighlightedIconSizeInBounds(bounds, reactionCount: reactionCount)
 
       return CGRect(x: (iconSize + spacing) * fi, y: bounds.height - highlightedSize - spacing, width: highlightedSize, height: highlightedSize)
-    }
-    else if let hi = highlightedIndex, index > hi {
+    } else if let hi = highlightedIndex, index > hi {
       let highlightedSize = computedHighlightedIconSizeInBounds(bounds, reactionCount: reactionCount)
 
       return CGRect(x: (iconSize + spacing) * (fi - 1) + highlightedSize, y: topMargin, width: iconSize, height: iconSize)

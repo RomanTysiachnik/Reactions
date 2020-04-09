@@ -51,7 +51,7 @@ extension Bundle {
 extension String {
   /**
    Returns the string localized.
-   
+
    - Parameter tableName: The receiver’s string table to search. By default the method attempts to use the table in FeedbackLocalizable.strings.
    */
   func localized(from tableName: String? = "FeedbackLocalizable") -> String {

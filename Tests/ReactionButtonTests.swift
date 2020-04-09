@@ -24,8 +24,8 @@
  *
  */
 
-import XCTest
 @testable import Reactions
+import XCTest
 
 class ReactionButtonTests: XCTestCase {
   func testReactionButton() {
@@ -63,7 +63,7 @@ class ReactionButtonTests: XCTestCase {
 
     XCTAssertNil(button.reactionSelector)
 
-    let select              = ReactionSelector()
+    let select = ReactionSelector()
     button.reactionSelector = select
 
     XCTAssertEqual(button.reactionSelector, select)
@@ -80,7 +80,7 @@ class ReactionButtonTests: XCTestCase {
 
     button.config = ReactionButtonConfig {
       $0.neutralTintColor = .red
-      $0.alignment        = .right
+      $0.alignment = .right
     }
 
     XCTAssertEqual(button.config.alignment, .right)
@@ -100,7 +100,7 @@ class ReactionButtonTests: XCTestCase {
   }
 
   func testPresentReactionSelector() {
-    let button              = ReactionButton()
+    let button = ReactionButton()
     button.reactionSelector = ReactionSelector()
 
     button.presentReactionSelector()
@@ -119,7 +119,7 @@ class ReactionButtonTests: XCTestCase {
   }
 
   func testDismissReactionSelector() {
-    let button              = ReactionButton()
+    let button = ReactionButton()
     button.reactionSelector = ReactionSelector()
 
     button.dismissReactionSelector()
@@ -128,7 +128,7 @@ class ReactionButtonTests: XCTestCase {
   func testTapButton() {
     let tap = UITapGestureRecognizer()
 
-    let control              = ReactionButton()
+    let control = ReactionButton()
     control.reactionSelector = ReactionSelector()
 
     control.tapAction(tap)
@@ -154,7 +154,7 @@ class ReactionButtonTests: XCTestCase {
 
     let press = PressBeganGesture()
 
-    let control              = ReactionButton()
+    let control = ReactionButton()
     control.reactionSelector = ReactionSelector()
 
     // Long Press with move
@@ -191,15 +191,15 @@ class ReactionButtonTests: XCTestCase {
         set {}
       }
 
-      override func location(in view: UIView?) -> CGPoint {
+      override func location(in _: UIView?) -> CGPoint {
         return CGPoint(x: 10, y: 10)
       }
     }
 
     let press = PressBeganGesture()
 
-    let control                     = ReactionButton()
-    control.reactionSelector        = ReactionSelector()
+    let control = ReactionButton()
+    control.reactionSelector = ReactionSelector()
     control.reactionSelector?.frame = control.reactionSelector?.boundsToFit() ?? .zero
 
     control.reactionSelector?.longPressAction(press)
@@ -207,9 +207,9 @@ class ReactionButtonTests: XCTestCase {
     press.currentState = .changed
 
     control.reactionSelector?.longPressAction(press)
-    
+
     press.currentState = .ended
-    
+
     control.reactionSelector?.longPressAction(press)
 
     control.reactionSelector?.reactions = [Reaction.facebook.like]

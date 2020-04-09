@@ -13,39 +13,41 @@ final class ReactionCellView: UITableViewCell {
   @IBOutlet var avatarImageView: UIImageView! {
     didSet {
       avatarImageView.layer.masksToBounds = true
-      avatarImageView.layer.cornerRadius  = 18
+      avatarImageView.layer.cornerRadius = 18
     }
   }
 
-  @IBOutlet weak var facebookReactionButton: ReactionButton! {
+  @IBOutlet var facebookReactionButton: ReactionButton! {
     didSet {
       facebookReactionButton.reactionSelector = ReactionSelector()
-      facebookReactionButton.config           = ReactionButtonConfig() {
-        $0.iconMarging      = 8
-        $0.spacing          = 4
-        $0.font             = UIFont(name: "HelveticaNeue", size: 14)
+      facebookReactionButton.config = ReactionButtonConfig {
+        $0.iconMarging = 8
+        $0.spacing = 4
+        $0.font = UIFont(name: "HelveticaNeue", size: 14)
         $0.neutralTintColor = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
-        $0.alignment        = .left
+        $0.alignment = .left
       }
 
       facebookReactionButton.reactionSelector?.feedbackDelegate = self
     }
   }
-  @IBOutlet weak var reactionSummary: ReactionSummary! {
+
+  @IBOutlet var reactionSummary: ReactionSummary! {
     didSet {
       reactionSummary.reactions = Reaction.facebook.all
       reactionSummary.setDefaultText(withTotalNumberOfPeople: 4, includingYou: true)
-      reactionSummary.config    = ReactionSummaryConfig {
-        $0.spacing      = 8
-        $0.iconMarging  = 2
-        $0.font         = UIFont(name: "HelveticaNeue", size: 12)
-        $0.textColor    = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
-        $0.alignment    = .left
+      reactionSummary.config = ReactionSummaryConfig {
+        $0.spacing = 8
+        $0.iconMarging = 2
+        $0.font = UIFont(name: "HelveticaNeue", size: 12)
+        $0.textColor = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
+        $0.alignment = .left
         $0.isAggregated = true
       }
     }
   }
-  @IBOutlet weak var feedbackLabel: UILabel! {
+
+  @IBOutlet var feedbackLabel: UILabel! {
     didSet {
       feedbackLabel.isHidden = true
     }
@@ -53,13 +55,13 @@ final class ReactionCellView: UITableViewCell {
 
   // Actions
 
-  @IBAction func facebookButtonReactionTouchedUpAction(_ sender: AnyObject) {
+  @IBAction func facebookButtonReactionTouchedUpAction(_: AnyObject) {
     if facebookReactionButton.isSelected == false {
-      facebookReactionButton.reaction   = Reaction.facebook.like
+      facebookReactionButton.reaction = Reaction.facebook.like
     }
   }
 
-  @IBAction func summaryTouchedAction(_ sender: AnyObject) {
+  @IBAction func summaryTouchedAction(_: AnyObject) {
     facebookReactionButton.presentReactionSelector()
   }
 }

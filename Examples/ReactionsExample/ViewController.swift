@@ -9,10 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController {
-  @IBOutlet weak var reactionSelect: ReactionSelector!
-  @IBOutlet weak var reactionButton: ReactionButton! {
+  @IBOutlet var reactionSelect: ReactionSelector!
+  @IBOutlet var reactionButton: ReactionButton! {
     didSet {
-      reactionButton.config = ReactionButtonConfig() {
+      reactionButton.config = ReactionButtonConfig {
         $0.alignment = .centerLeft
       }
     }
@@ -21,16 +21,15 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    self.title = "Reactions"
+    title = "Reactions"
   }
 
   // MARK: - Action Methods
 
-  @IBAction func reactionChangedAction(_ sender: AnyObject) {
+  @IBAction func reactionChangedAction(_: AnyObject) {
     guard let reaction = reactionSelect.selectedReaction else { return }
 
-    reactionButton.reaction   = reaction
+    reactionButton.reaction = reaction
     reactionButton.isSelected = false
   }
 }
-

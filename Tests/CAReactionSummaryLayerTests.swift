@@ -24,16 +24,16 @@
  *
  */
 
-import XCTest
 @testable import Reactions
+import XCTest
 
 class CAReactionSummaryLayerTests: XCTestCase {
   func testSetConfig() {
     guard let context = CGContext(data: nil, width: 100, height: 100, bitsPerComponent: 8, bytesPerRow: 100 * 4, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue) else { return }
 
-    let summaryLayer       = CAReactionSummaryLayer()
+    let summaryLayer = CAReactionSummaryLayer()
     summaryLayer.reactions = Reaction.facebook.all
-    summaryLayer.config    = ReactionSummaryConfig {
+    summaryLayer.config = ReactionSummaryConfig {
       $0.alignment = .right
     }
 

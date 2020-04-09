@@ -24,8 +24,8 @@
  *
  */
 
-import XCTest
 @testable import Reactions
+import XCTest
 
 class UIReactionControlTests: XCTestCase {
   func testUIReactionControlInit() {
@@ -36,7 +36,7 @@ class UIReactionControlTests: XCTestCase {
   }
 
   func testUIReactionControlWithFrame() {
-    let frame   = CGRect(x: 50, y: 50, width: 300, height: 20)
+    let frame = CGRect(x: 50, y: 50, width: 300, height: 20)
     let control = UIReactionControl(frame: frame)
 
     XCTAssertNotNil(control)
@@ -61,7 +61,7 @@ class UIReactionControlTests: XCTestCase {
     }
 
     let control = CustomControl()
-    let expect  = expectation(description: "update")
+    let expect = expectation(description: "update")
 
     control.expectation = expect
     control.layoutSubviews()
@@ -77,8 +77,8 @@ class UIReactionControlTests: XCTestCase {
 
     let dummyView = UIView()
     dummyView.addSubview(control)
-    
-    let expect3   = expectation(description: "update")
+
+    let expect3 = expectation(description: "update")
 
     control.expectation = expect3
     control.setupAndUpdate()
