@@ -116,12 +116,14 @@ public final class ReactionSelector: UIReactionControl {
         $0.addTarget(self, action: #selector(ReactionSelector.longPressAction))
         $0.minimumPressDuration = 0
       })
-
+      
       let backgroundBounds = boundsToFit()
       backgroundLayer.path = UIBezierPath(roundedRect: backgroundBounds, cornerRadius: backgroundBounds.height / 2).cgPath
-
+      
       layer.addSublayer(backgroundLayer)
     }
+    
+    backgroundLayer.fillColor = config.backgroundFillColor
 
     reactionIconLayers.forEach { layer.addSublayer($0) }
     reactionLabels.forEach { addSubview($0) }
@@ -147,6 +149,8 @@ public final class ReactionSelector: UIReactionControl {
 
     backgroundLayer.add(pathAnimation, forKey: "morhingPath")
 
+    backgroundLayer.fillColor = config.backgroundFillColor
+    
     for index in 0 ..< reactionIconLayers.count {
       updateReactionAtIndex(index, highlighted: stateHighlightedReactionIndex == index)
     }
