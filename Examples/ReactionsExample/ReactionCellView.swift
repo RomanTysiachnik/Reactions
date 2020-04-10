@@ -89,7 +89,4 @@ extension ReactionCellView: ReactionFeedbackDelegate {
 
     feedbackLabel.text = feedback?.localizedString
   }
-  func didScrolledToNextReaction() {
-    feedback()
-  }
 }

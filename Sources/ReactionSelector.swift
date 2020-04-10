@@ -209,14 +209,13 @@ public final class ReactionSelector: UIReactionControl {
 
     if gestureRecognizer.state == .began {
       feedback = .slideFingerAcross
+      
+      sendActions(for: .touchDragEnter)
     }
 
     if gestureRecognizer.state == .changed {
       if needsUpdate {
         let isInside = isPointInsideExtendedBounds(location)
-        if isInside {
-          feedbackDelegate?.didScrolledToNextReaction()
-        }
 
         feedback = isInside ? .slideFingerAcross : .releaseToCancel
 
