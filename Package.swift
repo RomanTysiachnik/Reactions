@@ -14,11 +14,6 @@ let package = Package(
       name: "Reactions",
       dependencies: [],
       path: "Sources"
-    ),
-    .testTarget(
-      name: "ReactionsTests",
-      dependencies: ["Reactions"],
-      path: "Tests"
-    ),
+    )
   ]
 )

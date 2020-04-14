@@ -35,8 +35,9 @@ import UIKit
  */
 public final class ReactionButton: UIReactionControl {
   private var isSelectingReaction = false
-  private let iconImageView: UIImageView = Components.reactionButton.facebookLikeIcon()
-  private let titleLabel: UILabel = Components.reactionButton.facebookLikeLabel()
+  private let iconImageView: UIImageView = Components.ReactionButton.likeIcon()
+  private let titleLabel: UILabel = Components.ReactionButton.likeLabel()
+  
   private lazy var overlay: UIView = UIView().build {
     $0.clipsToBounds = false
     $0.backgroundColor = .clear
@@ -46,8 +47,8 @@ public final class ReactionButton: UIReactionControl {
   }
 
   public var isInitObserve: Bool = true
-  public var likeReaction: Reaction = Reaction.facebook.like
-  public var unlikeReaction: Reaction = Reaction.facebook.like
+  public var likeReaction: Reaction?
+  public var likedReaction: Reaction?
   public var didTapButton: ((_ sender: ReactionButton) -> Void)?
   public var didUpdateReaction: ((_ reaction: Reaction?) -> Void)?
   public var willShowSelector: (() -> Void)?
@@ -72,7 +73,7 @@ public final class ReactionButton: UIReactionControl {
 
    The reaction `title` fills the button one, and the `alternativeIcon` is used to display the icon. If the `alternativeIcon` is nil, the `icon` is used instead.
    */
-  public var reaction = Reaction.facebook.like {
+  public var reaction: Reaction? {
     didSet { update() }
   }
 
@@ -111,9 +112,9 @@ public final class ReactionButton: UIReactionControl {
   // MARK: - Updating Object State
 
   override func update() {
-    iconImageView.image = reaction.alternativeIcon ?? reaction.icon
+    iconImageView.image = reaction?.alternativeIcon ?? reaction?.icon
     titleLabel.font = config.font
-    titleLabel.text = reaction.title
+    titleLabel.text = reaction?.title
 
     let configSpacing = (config.hideIcon || config.hideTitle) ? 0 : config.spacing
     let iconSize = config.hideIcon ? 0
@@ -142,8 +143,9 @@ public final class ReactionButton: UIReactionControl {
     iconImageView.frame = iconFrame
     titleLabel.frame = titleFrame
     UIView.transition(with: titleLabel, duration: 0.15, options: .transitionCrossDissolve, animations: { [unowned self] in
-      self.iconImageView.tintColor = self.isSelected ? self.reaction.color : self.config.neutralTintColor
-      self.titleLabel.textColor = self.isSelected ? self.reaction.color : self.config.neutralTintColor
+      let reactionColor = self.reaction?.color ?? self.config.neutralTintColor
+      self.iconImageView.tintColor = self.isSelected ? reactionColor : self.config.neutralTintColor
+      self.titleLabel.textColor = self.isSelected ? reactionColor : self.config.neutralTintColor
       }, completion: nil)
   }
 
@@ -164,8 +166,8 @@ public final class ReactionButton: UIReactionControl {
     }
 
     sendActions(for: .touchUpInside)
-    reaction = isSelected ? likeReaction : unlikeReaction
-    didUpdateReaction?(isSelected ? likeReaction : nil)
+    reaction = isSelected ? likedReaction : likeReaction
+    didUpdateReaction?(isSelected ? likedReaction : nil)
     didTapButton?(self)
   }
 

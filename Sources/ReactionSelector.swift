@@ -39,7 +39,7 @@ public final class ReactionSelector: UIReactionControl {
   private var reactionIconLayers: [CALayer] = []
   private var reactionLabels: [UILabel] = []
   private let backgroundLayer = Components.reactionSelect.backgroundLayer()
-  private var _reactions: [Reaction] = Reaction.facebook.all
+  private var _reactions: [Reaction] = []
 
   /**
    The reactions available in the selector.

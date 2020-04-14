@@ -79,14 +79,14 @@ struct Components {
     }
   }
 
-  struct reactionButton {
-    static func facebookLikeIcon() -> UIImageView {
+  struct ReactionButton {
+    static func likeIcon() -> UIImageView {
       return UIImageView().build {
         $0.contentMode = .scaleAspectFit
       }
     }
 
-    static func facebookLikeLabel() -> UILabel {
+    static func likeLabel() -> UILabel {
       return UILabel().build {
         $0.font = UIFont(name: "HelveticaNeue", size: 16)
         $0.textColor = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
