@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Reactions'
-  s.version          = '4.0.0'
+  s.version          = '4.1.0'
   s.license          = 'MIT'
   s.summary          = 'Fully customizable reactions control'
   s.homepage         = 'https://github.com/RomanTysiachnik/Reactions'

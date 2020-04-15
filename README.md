@@ -198,7 +198,7 @@ $ brew install carthage
 To integrate `Reactions` into your Xcode project using Carthage, specify it in your `Cartfile` file:
 
 ```ogdl
-github "RomanTysiachnik/Reactions" >= 4.0.0
+github "RomanTysiachnik/Reactions" >= 4.1.0
 ```
 
 #### Swift Package Manager
@@ -211,7 +211,7 @@ let package = Package(
     name: "YOUR_PROJECT_NAME",
     targets: [],
     dependencies: [
-      .Package(url: "https://github.com/RomanTysiachnik/Reactions.git", versions: "4.0.0" ..< Version.max)
+      .Package(url: "https://github.com/RomanTysiachnik/Reactions.git", versions: "4.1.0" ..< Version.max)
     ]
 )
 ```

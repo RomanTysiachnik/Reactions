@@ -44,6 +44,9 @@ public final class ReactionButtonConfig: Configurable {
 
   /// The font of the text.
   public var font: UIFont! = UIFont(name: "HelveticaNeue", size: 16)
+  
+  /// The font of the text when selected.
+  public var selectedFont: UIFont! = UIFont(name: "HelveticaNeue", size: 16)
 
   /// The color of the text (and image) when no reaction is selected.
   public var neutralTintColor: UIColor = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
@@ -59,6 +62,9 @@ public final class ReactionButtonConfig: Configurable {
   
   /// The offset between the selector and button
   public var selectorOffset: CGFloat = 12
+  
+  /// The offset between the selector and button
+  public var selectionAnimationDuration: Double = 0.15
 
   /**
    The technique to use for aligning the icon and the text.

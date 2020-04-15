@@ -113,8 +113,9 @@ public final class ReactionButton: UIReactionControl {
 
   override func update() {
     iconImageView.image = reaction?.alternativeIcon ?? reaction?.icon
-    titleLabel.font = config.font
+    
     titleLabel.text = reaction?.title
+    titleLabel.font = isSelected ? config.selectedFont : config.font
 
     let configSpacing = (config.hideIcon || config.hideTitle) ? 0 : config.spacing
     let iconSize = config.hideIcon ? 0
@@ -142,10 +143,15 @@ public final class ReactionButton: UIReactionControl {
 
     iconImageView.frame = iconFrame
     titleLabel.frame = titleFrame
-    UIView.transition(with: titleLabel, duration: 0.15, options: .transitionCrossDissolve, animations: { [unowned self] in
-      let reactionColor = self.reaction?.color ?? self.config.neutralTintColor
-      self.iconImageView.tintColor = self.isSelected ? reactionColor : self.config.neutralTintColor
-      self.titleLabel.textColor = self.isSelected ? reactionColor : self.config.neutralTintColor
+    
+    UIView.transition(
+      with: titleLabel,
+      duration: config.selectionAnimationDuration,
+      options: .transitionCrossDissolve,
+      animations: { [unowned self] in
+        let reactionColor = self.reaction?.color ?? self.config.neutralTintColor
+        self.iconImageView.tintColor = self.isSelected ? reactionColor : self.config.neutralTintColor
+        self.titleLabel.textColor = self.isSelected ? reactionColor : self.config.neutralTintColor
       }, completion: nil)
   }
 
